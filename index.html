@@ -1,159 +1,123 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MimiFood</title>
-<style>
-body {font-family: Arial, sans-serif; margin:0; background:#fff8f0; padding-bottom: 150px;}
-header {background:#d35400; color:white; text-align:center; padding:20px;}
-.container {padding:15px;}
-input, textarea {width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ccc; box-sizing: border-box;}
-.menu-item {background:white; margin-bottom:20px; border-radius:12px; overflow:hidden; box-shadow:0 4px 8px rgba(0,0,0,0.1);}
-.menu-item img {width:100%; height:250px; object-fit:cover;}
-.menu-content {padding:15px;}
-.menu-desc {font-size: 14px; color: #666; margin: 5px 0 15px 0; line-height: 1.4;}
-.controls {display:flex; align-items:center; gap:15px; margin-top: 10px;}
-.controls button {padding:8px 20px; border:none; background:#d35400; color:white; border-radius:5px; font-weight: bold; cursor: pointer; transition: 0.1s;}
-.controls button:active {transform: scale(0.9); background: #a04000;}
-.info-box {background: #fff; padding: 20px; border-radius: 12px; margin-top: 20px; border: 1px dashed #d35400;}
-.cart {position:fixed; bottom:0; width:100%; background:#fff; padding:15px; box-shadow:0 -2px 10px rgba(0,0,0,0.2); box-sizing: border-box; z-index: 1000;}
-.cart button {width:100%; padding:12px; background:#25D366; color:white; border:none; border-radius:8px; font-size:16px; font-weight: bold; cursor:pointer;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MimiFood Bekasi - Daftar Menu</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #fff5f5; margin: 0; padding: 20px; padding-bottom: 120px; }
+        .header { text-align: center; padding: 20px; background: white; border-radius: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; border: 2px solid #ff4d4d; }
+        .header h1 { margin: 0; color: #d32f2f; font-size: 24px; }
+        .menu-container { max-width: 500px; margin: auto; }
+        .menu-item { background: white; padding: 12px; border-radius: 15px; margin-bottom: 12px; display: flex; align-items: center; border-left: 5px solid #ff4d4d; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
+        .menu-img { width: 85px; height: 85px; border-radius: 12px; object-fit: cover; margin-right: 15px; background: #eee; }
+        .menu-info { flex: 1; }
+        .menu-info h3 { margin: 0; font-size: 15px; color: #444; }
+        .menu-info p { margin: 5px 0; color: #d32f2f; font-weight: bold; font-size: 16px; }
+        .controls { display: flex; align-items: center; gap: 10px; }
+        .btn-qty { background: #ff4d4d; color: white; border: none; width: 30px; height: 30px; border-radius: 50%; font-weight: bold; cursor: pointer; }
+        .qty { font-weight: bold; min-width: 20px; text-align: center; }
+        
+        .cart-footer { position: fixed; bottom: 0; left: 0; right: 0; background: white; padding: 20px; box-shadow: 0 -5px 20px rgba(0,0,0,0.1); display: flex; flex-direction: column; gap: 10px; max-width: 500px; margin: auto; border-radius: 25px 25px 0 0; }
+        .total-row { display: flex; justify-content: space-between; align-items: center; }
+        .total-amount { font-size: 20px; font-weight: bold; color: #d32f2f; }
+        .btn-wa { background: #25d366; color: white; border: none; padding: 15px; border-radius: 12px; font-weight: bold; cursor: pointer; text-align: center; font-size: 16px; }
+    </style>
 </head>
 <body>
 
-<header>
-    <h1>🍱 MimiFood</h1>
-    <p>Pilih Menu & Isi Data Pesanan</p>
-</header>
+<div class="header">
+    <h1>🍱 Daftar Menu MimiFood</h1>
+    <p>Bekasi, Indonesia</p>
+</div>
 
-<div class="container">
-    <input type="text" id="nama" placeholder="Nama Anda">
-    <textarea id="alamat" placeholder="Alamat Lengkap Pengiriman"></textarea>
-    <div id="daftar-menu"></div>
-    <div class="info-box">
-        <h3 style="margin-top:0; color:#d35400;">ℹ️ Informasi Toko</h3>
-        <p>📍 <b>Lokasi:</b> MimiFood (Google Maps)</p>
-        <p>🕒 <b>Buka:</b> 06.00 - 22.00 WIB</p>
-        <p>🚚 <b>Layanan:</b> Bisa delivery / ambil di tempat</p>
-        <p>🔥 <b>Kualitas:</b> Masakan fresh & dibuat saat dipesan</p>
+<div class="menu-container" id="menu-list"></div>
+
+<div class="cart-footer">
+    <div class="total-row">
+        <span>Total Pesanan:</span>
+        <span class="total-amount" id="total-display">Rp 0</span>
     </div>
+    <button class="btn-wa" onclick="sendWA()">🚀 Kirim Pesanan ke WhatsApp</button>
 </div>
 
-<div class="cart">
-    <p id="total" style="font-weight:bold; font-size:18px; margin:0 0 10px 0;">Total: Rp 0</p>
-    <button onclick="kirimWA()">📲 Pesan Sekarang (WhatsApp)</button>
-</div>
+<audio id="clickSound" src="https://www.soundjay.com/buttons/sounds/button-16.mp3"></audio>
+<audio id="moneySound" src="https://www.myinstants.com/media/sounds/cash-register-purchase.mp3"></audio>
 
 <script>
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const menuData = [
+        { id: 1, name: "Pangsit Rebus Chili Oil", price: 10000, img: "pangsitrebus.png" },
+        { id: 2, name: "Pangsit Goreng Chili Oil", price: 10000, img: "pangsitgoreng.png" },
+        { id: 3, name: "Nasi Goreng Jengkol Spesial", price: 12000, img: "nasgorjengkol.png" },
+        { id: 4, name: "Ayam Sambal Matah + Nasi", price: 18000, img: "ayamsambalmatah.png" },
+        { id: 5, name: "Ayam Sambal Terasi + Nasi", price: 18000, img: "ayamsambalterasi.png" },
+        { id: 6, name: "Tori No Teba + Nasi", price: 16000, img: "torinoteba.png" },
+        { id: 7, name: "Nasi Bakar Cumi Balado", price: 12000, img: "nasicumi.png" },
+        { id: 8, name: "Nasi Bakar Ayam Suwir Kemangi", price: 12000, img: "nasiayamsuwir.png" },
+        { id: 9, name: "Bakcang Ayam Original", price: 8000, img: "bakcangori.png" },
+        { id: 10, name: "Bakcang Ayam + Tetelan", price: 15000, img: "bakcangtetelan.png" }
+    ];
 
-function playSound(type) {
-    const osc = audioCtx.createOscillator();
-    const gain = audioCtx.createGain();
-    osc.connect(gain);
-    gain.connect(audioCtx.destination);
+    let cart = {};
 
-    if (type === 'tambah') {
-        // Suara klik mekanik tajam
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(1200, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.05);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.05);
-    } else if (type === 'kurang') {
-        // Suara klik lebih berat
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(400, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.1);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.1);
-    } else if (type === 'cash') {
-        // Efek Mesin Uang (Chaching!)
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(1500, audioCtx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(2500, audioCtx.currentTime + 0.1);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-        osc.start();
-        osc.stop(audioCtx.currentTime + 0.3);
-    }
-}
-
-const menu = {
-    nasgor: {nama:"Nasi Goreng Jengkol Spesial", harga:12000, img:"nasgor.png", desc:"Gurih, pedas pas, dan jengkolnya empuk tidak bau!"},
-    bakcang: {nama:"Bakcang Ayam Original", harga:8000, img:"bakcangori.png", desc:"Ketan legit isi ayam berbumbu kecap manis gurih."},
-    tetelan: {nama:"Bakcang Ayam + Tetelan", harga:15000, img:"bakcangori.png", desc:"Varian spesial dengan tambahan tetelan sapi juicy."},
-    tori: {nama:"Tori No Teba + Nasi", harga:16000, img:"torinoteba.png", desc:"Sayap ayam isi daging premium yang renyah dan lembut."},
-    matah: {nama:"Ayam Sambal Matah + Nasi", harga:18000, img:"ayammatah.png", desc:"Ayam krispi dengan kesegaran sambal matah khas Bali."},
-    terasi: {nama:"Ayam Sambal Terasi + Nasi", harga:18000, img:"ayamterasi.png", desc:"Ayam empuk dengan sambal terasi ulek yang harum."},
-    pecel: {nama:"Pecel Ayam + Nasi", harga:18000, img:"pecel.png", desc:"Ayam bumbu kuning, lalapan segar, dan sambal pecel."},
-    nasibakar: {nama:"Nasi Bakar Ayam Suwir Kemangi", harga:12000, img:"nasiayamsuwir.png", desc:"Nasi gurih aroma santan dengan wangi kemangi."},
-    cumi: {nama:"Nasi Bakar Cumi Balado", harga:12000, img:"nasicumi.png", desc:"Isian cumi asin balado pedas mantap, bikin nagih!"}
-};
-
-let jumlah = {};
-
-function renderMenu(){
-    let html = "";
-    for(let key in menu){
-        jumlah[key] = 0;
-        html += `
-        <div class="menu-item">
-            <img src="${menu[key].img}">
-            <div class="menu-content">
-                <h3 style="margin:0;">${menu[key].nama}</h3>
-                <p class="menu-desc">${menu[key].desc}</p>
-                <p style="color:#d35400; font-weight:bold; font-size:18px;">Rp ${menu[key].harga.toLocaleString('id-ID')}</p>
+    function renderMenu() {
+        const container = document.getElementById('menu-list');
+        container.innerHTML = menuData.map(item => `
+            <div class="menu-item">
+                <img src="${item.img}" class="menu-img">
+                <div class="menu-info">
+                    <h3>${item.name}</h3>
+                    <p>Rp ${item.price.toLocaleString('id-ID')}</p>
+                </div>
                 <div class="controls">
-                    <button onclick="kurang('${key}')">-</button>
-                    <span id="qty-${key}" style="font-weight:bold;">0</span>
-                    <button onclick="tambah('${key}')">+</button>
+                    <button class="btn-qty" onclick="updateQty(${item.id}, -1)">-</button>
+                    <span class="qty" id="qty-${item.id}">0</span>
+                    <button class="btn-qty" onclick="updateQty(${item.id}, 1)">+</button>
                 </div>
             </div>
-        </div>`;
+        `).join('');
     }
-    document.getElementById("daftar-menu").innerHTML = html;
-}
 
-renderMenu();
-
-function update(){
-    let total = 0;
-    for(let key in jumlah){
-        document.getElementById("qty-"+key).innerText = jumlah[key];
-        total += jumlah[key] * menu[key].harga;
+    function updateQty(id, change) {
+        if (!cart[id]) cart[id] = 0;
+        cart[id] += change;
+        if (cart[id] < 0) cart[id] = 0;
+        document.getElementById(`qty-${id}`).innerText = cart[id];
+        playEffect();
+        calculateTotal();
     }
-    document.getElementById("total").innerText = "Total: Rp " + total.toLocaleString('id-ID');
-}
 
-function tambah(key){ playSound('tambah'); jumlah[key]++; update(); }
-function kurang(key){ if(jumlah[key] > 0){ playSound('kurang'); jumlah[key]--; update(); } }
-
-function kirimWA(){
-    const nama = document.getElementById("nama").value;
-    const alamat = document.getElementById("alamat").value;
-    if(!nama){ alert("Isi nama dulu ya!"); return; }
-    
-    playSound('cash'); // Suara mesin uang
-
-    let pesan = "🧾 *PESANAN MIMIFOOD*%0A%0ANama: " + nama + "%0AAlamat: " + alamat + "%0A";
-    let ada = false;
-    for(let key in jumlah){
-        if(jumlah[key] > 0){
-            ada = true;
-            pesan += "✅ " + menu[key].nama + " (x" + jumlah[key] + ")%0A";
-        }
+    function calculateTotal() {
+        let total = 0;
+        menuData.forEach(item => { if (cart[item.id]) total += item.price * cart[item.id]; });
+        document.getElementById('total-display').innerText = "Rp " + total.toLocaleString('id-ID');
     }
-    if(!ada){ alert("Pilih menu dulu!"); return; }
-    
-    setTimeout(() => {
-        window.open("https://wa.me/6288211345402?text=" + pesan);
-    }, 500); // Beri waktu suara bunyi sebelum pindah ke WA
-}
+
+    function playEffect() {
+        const click = document.getElementById('clickSound');
+        const money = document.getElementById('moneySound');
+        click.volume = 1.0; money.volume = 1.0;
+        click.currentTime = 0; click.play();
+        setTimeout(() => { money.currentTime = 0; money.play(); }, 100);
+    }
+
+    function sendWA() {
+        let message = "🧾 *PESANAN MIMIFOOD*%0A%0A";
+        let total = 0;
+        let hasItems = false;
+        menuData.forEach(item => {
+            if (cart[item.id] > 0) {
+                const subtotal = item.price * cart[item.id];
+                message += `• *${item.name}* (x${cart[item.id]}) = Rp ${subtotal.toLocaleString('id-ID')}%0A`;
+                total += subtotal;
+                hasItems = true;
+            }
+        });
+        if (!hasItems) return alert("Pilih menu dulu ya!");
+        message += `%0A*TOTAL: Rp ${total.toLocaleString('id-ID')}*%0A%0A📍 Alamat: `;
+        window.open(`https://wa.me/6288211345402?text=${message}`);
+    }
+    renderMenu();
 </script>
 </body>
 </html>
